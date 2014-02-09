@@ -3,15 +3,15 @@
     "type": "joomla-package",
     "description": "Joomla Date Package",
     "keywords": ["joomla", "framework", "date"],
-    "homepage": "https://github.com/joomla/joomla-framework-date",
+    "homepage": "https://github.com/joomla-framework/date",
     "license": "GPL-2.0+",
     "require": {
         "php": ">=5.3.10"
     },
-    "target-dir": "Joomla/Date",
     "autoload": {
-    	"psr-0": {
-    		"Joomla\\Date": ""
+    	"psr-4": {
+    		"Joomla\\Date\\": "src/",
+            "Joomla\\Date\\Tests\\": "Tests/"
     	}
     }
 }
