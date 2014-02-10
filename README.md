@@ -1,4 +1,4 @@
-# The Date Package
+# The Date Package [![Build Status](https://travis-ci.org/joomla-framework/date.png?branch=master)](https://travis-ci.org/joomla-framework/date)
 
 
 ## Installation via Composer
