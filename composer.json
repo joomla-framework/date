@@ -17,5 +17,10 @@
             "Joomla\\Date\\": "src/",
             "Joomla\\Date\\Tests\\": "Tests/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0-dev"
+        }
     }
 }
