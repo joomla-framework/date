@@ -189,7 +189,7 @@ class Date extends \DateTime
 	 */
 	public function __toString()
 	{
-		return (string) parent::format(self::$format);
+		return (string) $this->format(self::$format);
 	}
 
 	/**
@@ -204,18 +204,21 @@ class Date extends \DateTime
 	 */
 	public function formatLocal($format, $local = false)
 	{
+		// Backup the current timezone in case we adjust it
+		$backupTz = $this->tz;
+
 		// If the returned time should not be local use GMT.
 		if ($local == false)
 		{
-			parent::setTimezone(self::$gmt);
+			$this->setTimezone(self::$gmt);
 		}
 
 		// Format the date.
-		$return = parent::format($format);
+		$return = $this->format($format);
 
 		if ($local == false)
 		{
-			parent::setTimezone($this->tz);
+			$this->setTimezone($backupTz);
 		}
 
 		return $return;
@@ -293,6 +296,6 @@ class Date extends \DateTime
 	 */
 	public function toUnix()
 	{
-		return (int) parent::format('U');
+		return (int) $this->format('U');
 	}
 }
