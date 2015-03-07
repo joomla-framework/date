@@ -15,7 +15,7 @@
     "autoload": {
         "psr-4": {
             "Joomla\\Date\\": "src/",
-            "Joomla\\Date\\Tests\\": "Tests/"
+            "Joomla\\Date\\Tests\\": "tests/"
         }
     },
     "extra": {
