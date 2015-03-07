@@ -137,13 +137,13 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test cases for format
+	 * Test cases for formatLocal
 	 *
 	 * @return  array
 	 *
 	 * @since   1.0
 	 */
-	public function seedTestFormat()
+	public function seedTestFormatLocal()
 	{
 		return array(
 			'basic' => array(
@@ -446,7 +446,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertThat(
-			$Date->format('D m/d/Y H:i', true),
+			$Date->formatLocal('D m/d/Y H:i', true),
 			$this->equalTo($expectedTime)
 		);
 	}
@@ -565,15 +565,14 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @dataProvider seedTestFormat
-	 * @since   1.0
-	 * @covers  Joomla\Date\Date::format
+	 * @dataProvider seedTestFormatLocal
+	 * @covers  Joomla\Date\Date::formatLocal
 	 */
-	public function testFormat($format, $local, $expected)
+	public function testFormatLocal($format, $local, $expected)
 	{
-		$this->assertThat(
-			$this->instance->format($format, $local),
-			$this->equalTo($expected)
+		$this->assertEquals(
+			$expected,
+			$this->instance->formatLocal($format, $local)
 		);
 	}
 
@@ -685,7 +684,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->setTimezone(new \DateTimeZone($tz));
 		$this->assertThat(
-			$this->instance->format('r', true),
+			$this->instance->formatLocal('r', true),
 			$this->equalTo($expected)
 		);
 	}

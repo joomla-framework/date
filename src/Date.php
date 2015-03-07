@@ -46,8 +46,7 @@ class Date extends \DateTime
 	protected static $gmt;
 
 	/**
-	 * Placeholder for a DateTimeZone object with the default server
-	 * time zone as the time zone.
+	 * Placeholder for a DateTimeZone object with the default server time zone as the time zone.
 	 *
 	 * @var    \DateTimeZone
 	 * @since  1.0
@@ -122,51 +121,51 @@ class Date extends \DateTime
 		switch ($name)
 		{
 			case 'daysinmonth':
-				$value = $this->format('t', true);
+				$value = $this->formatLocal('t', true);
 				break;
 
 			case 'dayofweek':
-				$value = $this->format('N', true);
+				$value = $this->formatLocal('N', true);
 				break;
 
 			case 'dayofyear':
-				$value = $this->format('z', true);
+				$value = $this->formatLocal('z', true);
 				break;
 
 			case 'isleapyear':
-				$value = (boolean) $this->format('L', true);
+				$value = (boolean) $this->formatLocal('L', true);
 				break;
 
 			case 'day':
-				$value = $this->format('d', true);
+				$value = $this->formatLocal('d', true);
 				break;
 
 			case 'hour':
-				$value = $this->format('H', true);
+				$value = $this->formatLocal('H', true);
 				break;
 
 			case 'minute':
-				$value = $this->format('i', true);
+				$value = $this->formatLocal('i', true);
 				break;
 
 			case 'second':
-				$value = $this->format('s', true);
+				$value = $this->formatLocal('s', true);
 				break;
 
 			case 'month':
-				$value = $this->format('m', true);
+				$value = $this->formatLocal('m', true);
 				break;
 
 			case 'ordinal':
-				$value = $this->format('S', true);
+				$value = $this->formatLocal('S', true);
 				break;
 
 			case 'week':
-				$value = $this->format('W', true);
+				$value = $this->formatLocal('W', true);
 				break;
 
 			case 'year':
-				$value = $this->format('Y', true);
+				$value = $this->formatLocal('Y', true);
 				break;
 
 			default:
@@ -194,16 +193,16 @@ class Date extends \DateTime
 	}
 
 	/**
-	 * Gets the date as a formatted string.
+	 * Gets the date as a formatted and localised string.
 	 *
 	 * @param   string   $format  The date format specification string (see {@link PHP_MANUAL#date})
 	 * @param   boolean  $local   True to return the date string in the local time zone, false to return it in GMT.
 	 *
 	 * @return  string   The date string in the specified format format.
 	 *
-	 * @since   1.0
+	 * @since   __DEPLOY_VERSION__
 	 */
-	public function format($format, $local = false)
+	public function formatLocal($format, $local = false)
 	{
 		// If the returned time should not be local use GMT.
 		if ($local == false)
@@ -266,7 +265,7 @@ class Date extends \DateTime
 	 */
 	public function toISO8601($local = false)
 	{
-		return $this->format(\DateTime::RFC3339, $local);
+		return $this->formatLocal(\DateTime::RFC3339, $local);
 	}
 
 	/**
@@ -282,7 +281,7 @@ class Date extends \DateTime
 	 */
 	public function toRFC822($local = false)
 	{
-		return $this->format(\DateTime::RFC2822, $local);
+		return $this->formatLocal(\DateTime::RFC2822, $local);
 	}
 
 	/**
