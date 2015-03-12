@@ -121,51 +121,51 @@ class Date extends \DateTime
 		switch ($name)
 		{
 			case 'daysinmonth':
-				$value = $this->formatLocal('t', true);
+				$value = $this->formatLocal('t');
 				break;
 
 			case 'dayofweek':
-				$value = $this->formatLocal('N', true);
+				$value = $this->formatLocal('N');
 				break;
 
 			case 'dayofyear':
-				$value = $this->formatLocal('z', true);
+				$value = $this->formatLocal('z');
 				break;
 
 			case 'isleapyear':
-				$value = (boolean) $this->formatLocal('L', true);
+				$value = (boolean) $this->formatLocal('L');
 				break;
 
 			case 'day':
-				$value = $this->formatLocal('d', true);
+				$value = $this->formatLocal('d');
 				break;
 
 			case 'hour':
-				$value = $this->formatLocal('H', true);
+				$value = $this->formatLocal('H');
 				break;
 
 			case 'minute':
-				$value = $this->formatLocal('i', true);
+				$value = $this->formatLocal('i');
 				break;
 
 			case 'second':
-				$value = $this->formatLocal('s', true);
+				$value = $this->formatLocal('s');
 				break;
 
 			case 'month':
-				$value = $this->formatLocal('m', true);
+				$value = $this->formatLocal('m');
 				break;
 
 			case 'ordinal':
-				$value = $this->formatLocal('S', true);
+				$value = $this->formatLocal('S');
 				break;
 
 			case 'week':
-				$value = $this->formatLocal('W', true);
+				$value = $this->formatLocal('W');
 				break;
 
 			case 'year':
-				$value = $this->formatLocal('Y', true);
+				$value = $this->formatLocal('Y');
 				break;
 
 			default:
@@ -196,30 +196,22 @@ class Date extends \DateTime
 	 * Gets the date as a formatted and localised string.
 	 *
 	 * @param   string   $format  The date format specification string (see {@link PHP_MANUAL#date})
-	 * @param   boolean  $local   True to return the date string in the local time zone, false to return it in GMT.
 	 *
 	 * @return  string   The date string in the specified format format.
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function formatLocal($format, $local = false)
+	public function formatLocal($format)
 	{
-		// Backup the current timezone in case we adjust it
+		// Backup the current timezone
 		$backupTz = $this->tz;
 
-		// If the returned time should not be local use GMT.
-		if ($local == false)
-		{
-			$this->setTimezone(self::$gmt);
-		}
+		$this->setTimezone(self::$gmt);
 
 		// Format the date.
 		$return = $this->format($format);
 
-		if ($local == false)
-		{
-			$this->setTimezone($backupTz);
-		}
+		$this->setTimezone($backupTz);
 
 		return $return;
 	}
@@ -268,7 +260,12 @@ class Date extends \DateTime
 	 */
 	public function toISO8601($local = false)
 	{
-		return $this->formatLocal(\DateTime::RFC3339, $local);
+		if ($local)
+		{
+			return $this->formatLocal(\DateTime::RFC3339);
+		}
+
+		return $this->format(\DateTime::RFC3339);
 	}
 
 	/**
@@ -284,7 +281,12 @@ class Date extends \DateTime
 	 */
 	public function toRFC822($local = false)
 	{
-		return $this->formatLocal(\DateTime::RFC2822, $local);
+		if ($local)
+		{
+			return $this->formatLocal(\DateTime::RFC2822);
+		}
+
+		return $this->format(\DateTime::RFC2822);
 	}
 
 	/**
