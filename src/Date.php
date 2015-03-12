@@ -195,7 +195,7 @@ class Date extends \DateTime
 	/**
 	 * Gets the date as a formatted string in the GMT timezone.
 	 *
-	 * @param   string   $format  The date format specification string (see {@link PHP_MANUAL#date})
+	 * @param   string  $format  The date format specification string (see {@link PHP_MANUAL#date})
 	 *
 	 * @return  string   The date string in the specified format.
 	 *
