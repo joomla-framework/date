@@ -121,51 +121,51 @@ class Date extends \DateTime
 		switch ($name)
 		{
 			case 'daysinmonth':
-				$value = $this->formatLocal('t');
+				$value = $this->format('t');
 				break;
 
 			case 'dayofweek':
-				$value = $this->formatLocal('N');
+				$value = $this->format('N');
 				break;
 
 			case 'dayofyear':
-				$value = $this->formatLocal('z');
+				$value = $this->format('z');
 				break;
 
 			case 'isleapyear':
-				$value = (boolean) $this->formatLocal('L');
+				$value = (boolean) $this->format('L');
 				break;
 
 			case 'day':
-				$value = $this->formatLocal('d');
+				$value = $this->format('d');
 				break;
 
 			case 'hour':
-				$value = $this->formatLocal('H');
+				$value = $this->format('H');
 				break;
 
 			case 'minute':
-				$value = $this->formatLocal('i');
+				$value = $this->format('i');
 				break;
 
 			case 'second':
-				$value = $this->formatLocal('s');
+				$value = $this->format('s');
 				break;
 
 			case 'month':
-				$value = $this->formatLocal('m');
+				$value = $this->format('m');
 				break;
 
 			case 'ordinal':
-				$value = $this->formatLocal('S');
+				$value = $this->format('S');
 				break;
 
 			case 'week':
-				$value = $this->formatLocal('W');
+				$value = $this->format('W');
 				break;
 
 			case 'year':
-				$value = $this->formatLocal('Y');
+				$value = $this->format('Y');
 				break;
 
 			default:
@@ -193,15 +193,15 @@ class Date extends \DateTime
 	}
 
 	/**
-	 * Gets the date as a formatted and localised string.
+	 * Gets the date as a formatted string in the GMT timezone.
 	 *
 	 * @param   string   $format  The date format specification string (see {@link PHP_MANUAL#date})
 	 *
-	 * @return  string   The date string in the specified format format.
+	 * @return  string   The date string in the specified format.
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function formatLocal($format)
+	public function formatGmt($format)
 	{
 		// Backup the current timezone
 		$backupTz = $this->tz;
@@ -262,10 +262,10 @@ class Date extends \DateTime
 	{
 		if ($local)
 		{
-			return $this->formatLocal(\DateTime::RFC3339);
+			return $this->format(\DateTime::RFC3339);
 		}
 
-		return $this->format(\DateTime::RFC3339);
+		return $this->formatGmt(\DateTime::RFC3339);
 	}
 
 	/**
@@ -283,10 +283,10 @@ class Date extends \DateTime
 	{
 		if ($local)
 		{
-			return $this->formatLocal(\DateTime::RFC2822);
+			return $this->format(\DateTime::RFC2822);
 		}
 
-		return $this->format(\DateTime::RFC2822);
+		return $this->formatGmt(\DateTime::RFC2822);
 	}
 
 	/**

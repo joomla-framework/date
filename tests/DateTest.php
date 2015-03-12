@@ -125,56 +125,35 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test cases for formatLocal
+	 * Test cases for formatGmt
 	 *
 	 * @return  array
 	 */
-	public function seedTestFormatLocal()
+	public function seedTestFormatGmt()
 	{
 		return array(
-			'basic' => array(
-				'd/m/Y H:i:s',
-				true,
-				'20/12/2007 11:44:56',
-			),
-			'mmddyy' => array(
-				'mdy His',
-				true,
-				'122007 114456',
-			),
 			'mmddyyGMT' => array(
 				'mdy His',
-				false,
 				'122007 164456',
 			),
-			'Long' => array(
-				'D F j, Y H:i:s',
-				true,
-				'Thu December 20, 2007 11:44:56',
-				),
 			'LongGMT' => array(
 				'D F j, Y H:i:s',
-				false,
 				'Thu December 20, 2007 16:44:56',
 				),
 			'Long2' => array(
 				'H:i:s D F j, Y',
-				false,
 				'16:44:56 Thu December 20, 2007',
 				),
 			'Long3' => array(
 				'H:i:s l F j, Y',
-				false,
 				'16:44:56 Thursday December 20, 2007',
 			),
 			'Long4' => array(
 				'H:i:s l M j, Y',
-				false,
 				'16:44:56 Thursday Dec 20, 2007',
 			),
 			'RFC822' => array(
 				'r',
-				false,
 				'Thu, 20 Dec 2007 16:44:56 +0000',
 			),
 		);
@@ -418,7 +397,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(
 			$expectedTime,
-			$Date->formatLocal('D m/d/Y H:i', true)
+			$Date->format('D m/d/Y H:i')
 		);
 	}
 
@@ -505,17 +484,16 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * Testing format
 	 *
 	 * @param   string   $format    How should the time be formatted?
-	 * @param   boolean  $local     Local (true) or GMT?
 	 * @param   string   $expected  What should the resulting time string look like?
 	 *
-	 * @dataProvider seedTestFormatLocal
-	 * @covers  Joomla\Date\Date::formatLocal
+	 * @dataProvider seedTestFormatGmt
+	 * @covers  Joomla\Date\Date::formatGmt
 	 */
-	public function testFormatLocal($format, $local, $expected)
+	public function testFormatGmt($format, $expected)
 	{
 		$this->assertEquals(
 			$expected,
-			$this->instance->formatLocal($format, $local)
+			$this->instance->formatGmt($format)
 		);
 	}
 
@@ -595,7 +573,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 		$this->instance->setTimezone(new \DateTimeZone($tz));
 		$this->assertEquals(
 			$expected,
-			$this->instance->formatLocal('r', true)
+			$this->instance->format('r')
 		);
 	}
 
