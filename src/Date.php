@@ -46,8 +46,7 @@ class Date extends \DateTime
 	protected static $gmt;
 
 	/**
-	 * Placeholder for a DateTimeZone object with the default server
-	 * time zone as the time zone.
+	 * Placeholder for a DateTimeZone object with the default server time zone as the time zone.
 	 *
 	 * @var    \DateTimeZone
 	 * @since  1.0
@@ -122,51 +121,51 @@ class Date extends \DateTime
 		switch ($name)
 		{
 			case 'daysinmonth':
-				$value = $this->format('t', true);
+				$value = $this->format('t');
 				break;
 
 			case 'dayofweek':
-				$value = $this->format('N', true);
+				$value = $this->format('N');
 				break;
 
 			case 'dayofyear':
-				$value = $this->format('z', true);
+				$value = $this->format('z');
 				break;
 
 			case 'isleapyear':
-				$value = (boolean) $this->format('L', true);
+				$value = (boolean) $this->format('L');
 				break;
 
 			case 'day':
-				$value = $this->format('d', true);
+				$value = $this->format('d');
 				break;
 
 			case 'hour':
-				$value = $this->format('H', true);
+				$value = $this->format('H');
 				break;
 
 			case 'minute':
-				$value = $this->format('i', true);
+				$value = $this->format('i');
 				break;
 
 			case 'second':
-				$value = $this->format('s', true);
+				$value = $this->format('s');
 				break;
 
 			case 'month':
-				$value = $this->format('m', true);
+				$value = $this->format('m');
 				break;
 
 			case 'ordinal':
-				$value = $this->format('S', true);
+				$value = $this->format('S');
 				break;
 
 			case 'week':
-				$value = $this->format('W', true);
+				$value = $this->format('W');
 				break;
 
 			case 'year':
-				$value = $this->format('Y', true);
+				$value = $this->format('Y');
 				break;
 
 			default:
@@ -190,34 +189,29 @@ class Date extends \DateTime
 	 */
 	public function __toString()
 	{
-		return (string) parent::format(self::$format);
+		return (string) $this->format(self::$format);
 	}
 
 	/**
-	 * Gets the date as a formatted string.
+	 * Gets the date as a formatted string in the GMT timezone.
 	 *
-	 * @param   string   $format  The date format specification string (see {@link PHP_MANUAL#date})
-	 * @param   boolean  $local   True to return the date string in the local time zone, false to return it in GMT.
+	 * @param   string  $format  The date format specification string (see {@link PHP_MANUAL#date})
 	 *
-	 * @return  string   The date string in the specified format format.
+	 * @return  string   The date string in the specified format.
 	 *
-	 * @since   1.0
+	 * @since   __DEPLOY_VERSION__
 	 */
-	public function format($format, $local = false)
+	public function formatGmt($format)
 	{
-		// If the returned time should not be local use GMT.
-		if ($local == false)
-		{
-			parent::setTimezone(self::$gmt);
-		}
+		// Backup the current timezone
+		$backupTz = $this->tz;
+
+		$this->setTimezone(self::$gmt);
 
 		// Format the date.
-		$return = parent::format($format);
+		$return = $this->format($format);
 
-		if ($local == false)
-		{
-			parent::setTimezone($this->tz);
-		}
+		$this->setTimezone($backupTz);
 
 		return $return;
 	}
@@ -266,7 +260,12 @@ class Date extends \DateTime
 	 */
 	public function toISO8601($local = false)
 	{
-		return $this->format(\DateTime::RFC3339, $local);
+		if ($local)
+		{
+			return $this->format(\DateTime::RFC3339);
+		}
+
+		return $this->formatGmt(\DateTime::RFC3339);
 	}
 
 	/**
@@ -282,7 +281,12 @@ class Date extends \DateTime
 	 */
 	public function toRFC822($local = false)
 	{
-		return $this->format(\DateTime::RFC2822, $local);
+		if ($local)
+		{
+			return $this->format(\DateTime::RFC2822);
+		}
+
+		return $this->formatGmt(\DateTime::RFC2822);
 	}
 
 	/**
@@ -294,6 +298,6 @@ class Date extends \DateTime
 	 */
 	public function toUnix()
 	{
-		return (int) parent::format('U');
+		return (int) $this->format('U');
 	}
 }
