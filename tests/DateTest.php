@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -160,11 +160,11 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test cases for getOffsetFromGMT
+	 * Test cases for getOffsetFromGmt
 	 *
 	 * @return  array
 	 */
-	public function seedTestGetOffsetFromGMT()
+	public function seedTestGetOffsetFromGmt()
 	{
 		return array(
 			'basic' => array(
@@ -461,21 +461,21 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Testing getOffsetFromGMT
+	 * Testing getOffsetFromGmt
 	 *
 	 * @param   mixed    $tz        Which time zone? (can be string or numeric
 	 * @param   string   $setTime   What time should be set?
 	 * @param   boolean  $hours     Return offset in hours (true) or seconds?
 	 * @param   string   $expected  What should the resulting time string look like?
 	 *
-	 * @dataProvider seedTestGetOffsetFromGMT
-	 * @covers  Joomla\Date\Date::getOffsetFromGMT
+	 * @dataProvider seedTestGetOffsetFromGmt
+	 * @covers  Joomla\Date\Date::getOffsetFromGmt
 	 */
-	public function testGetOffsetFromGMT($tz, $setTime, $hours, $expected)
+	public function testGetOffsetFromGmt($tz, $setTime, $hours, $expected)
 	{
 		$testDate = new Date($setTime, $tz);
 
-		$offset = $testDate->getOffsetFromGMT($hours);
+		$offset = $testDate->getOffsetFromGmt($hours);
 
 		$this->assertEquals($expected, $offset);
 	}

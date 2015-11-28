@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Date Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -225,7 +225,7 @@ class Date extends \DateTime
 	 *
 	 * @since   1.0
 	 */
-	public function getOffsetFromGMT($hours = false)
+	public function getOffsetFromGmt($hours = false)
 	{
 		return (float) $hours ? ($this->tz->getOffset($this) / 3600) : $this->tz->getOffset($this);
 	}
