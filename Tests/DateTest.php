@@ -9,48 +9,66 @@ namespace Joomla\Date\Tests;
 use Joomla\Date\Date;
 
 /**
- * Tests for Date class.
- *
- * @since  1.0
+ * Tests for \Joomla\Date\Date.
  */
 class DateTest extends \PHPUnit_Framework_TestCase
 {
 	/**
+	 * Backup of the date format in use by JDate
+	 *
+	 * @var  string
+	 */
+	private $format;
+
+	/**
 	 * An instance of the class to test.
 	 *
-	 * @var    Joomla\Date\Date
-	 * @since  1.0
+	 * @var  Date
 	 */
 	private $instance;
+
+	/**
+	 * Sets up the fixture.
+	 *
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->format = Date::$format;
+
+		$this->instance = new Date('12/20/2007 11:44:56', 'America/New_York');
+	}
+
+	/**
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function tearDown()
+	{
+		Date::$format = $this->format;
+
+		parent::tearDown();
+	}
 
 	/**
 	 * Test cases for __construct
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function seedTest__construct()
 	{
-		date_default_timezone_set('UTC');
-
-		return array(
+		$cases = array(
 			'basic' => array(
 				'12/23/2008 13:45',
 				null,
 				'Tue 12/23/2008 13:45',
 			),
-			'unix' => array(
-				strtotime('12/26/2008 13:45'),
-				null,
-				'Fri 12/26/2008 13:45',
-			),
 			'tzCT' => array(
-				'12/23/2008 13:45',
-				'US/Central',
-				'Tue 12/23/2008 13:45',
-			),
-			"tzCT" => array(
 				'12/23/2008 13:45',
 				'US/Central',
 				'Tue 12/23/2008 13:45',
@@ -61,14 +79,28 @@ class DateTest extends \PHPUnit_Framework_TestCase
 				'Tue 12/23/2008 13:45',
 			),
 		);
+
+		// Backup the default timezone before continuing - Using the system timezone apparently causes test failures
+		$timezone = new \DateTimeZone(date_default_timezone_get());
+
+		date_default_timezone_set('UTC');
+
+		$cases['unix'] = array(
+			strtotime('12/26/2008 13:45'),
+			null,
+			'Fri 12/26/2008 13:45',
+		);
+
+		// Restore the timezone
+		date_default_timezone_set($timezone->getName());
+
+		return $cases;
 	}
 
 	/**
 	 * Test cases for __get
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function seedTest__get()
 	{
@@ -140,8 +172,6 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * Test cases for format
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function seedTestFormat()
 	{
@@ -198,8 +228,6 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * Test cases for getOffsetFromGmt
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function seedTestGetOffsetFromGmt()
 	{
@@ -241,8 +269,6 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * Test cases for setTimezone
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function seedTestSetTimezone()
 	{
@@ -278,8 +304,6 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * Test cases for toISO8601
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function seedTestToISO8601()
 	{
@@ -321,8 +345,6 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * Test cases for toRFC822
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function seedTestToRFC822()
 	{
@@ -364,8 +386,6 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * Test cases for __toString
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function seedTestToString()
 	{
@@ -389,8 +409,6 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * Test cases for toUnix
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function seedTestToUnix()
 	{
@@ -433,26 +451,18 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider  seedTest__construct
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::__construct
 	 */
 	public function test__construct($date, $tz, $expectedTime)
 	{
 		$Date = new Date($date, $tz);
 
-		$this->assertThat(
-			date_format($Date, 'D m/d/Y H:i'),
-			$this->equalTo($expectedTime)
-		);
-
-		$this->assertThat(
-			$Date->format('D m/d/Y H:i', true),
-			$this->equalTo($expectedTime)
-		);
+		$this->assertEquals($expectedTime, date_format($Date, 'D m/d/Y H:i'));
+		$this->assertEquals($expectedTime, $Date->format('D m/d/Y H:i', true));
 	}
 
 	/**
-	 * Testing the Constructor
+	 * Testing the magic getter
 	 *
 	 * @param   string  $date      The date.
 	 * @param   string  $property  The property to test.
@@ -461,17 +471,13 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider  seedTest__get
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::__get
 	 */
 	public function test__get($date, $property, $expected)
 	{
 		$Date = new Date($date);
 
-		$this->assertThat(
-			$Date->$property,
-			$this->equalTo($expected)
-		);
+		$this->assertEquals($expected, $Date->$property);
 	}
 
 	/**
@@ -479,19 +485,13 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::__toString
 	 */
 	public function test__toString()
 	{
-		Date::$format = 'Y-m-d H:i:s';
-
 		$Date = new Date('2000-01-01 00:00:00');
 
-		$this->assertThat(
-			(string) $Date,
-			$this->equalTo('2000-01-01 00:00:00')
-		);
+		$this->assertEquals('2000-01-01 00:00:00', (string) $Date);
 	}
 
 	/**
@@ -503,7 +503,6 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider seedTestToString
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::__toString
 	 */
 	public function testToString($format, $expectedTime)
@@ -513,10 +512,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 			Date::$format = $format;
 		}
 
-		$this->assertThat(
-			$this->instance->__toString(),
-			$this->equalTo($expectedTime)
-		);
+		$this->assertEquals($expectedTime, (string) $this->instance);
 	}
 
 	/**
@@ -530,30 +526,14 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider seedTestGetOffsetFromGmt
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::getOffsetFromGmt
 	 */
 	public function testGetOffsetFromGmt($tz, $setTime, $hours, $expected)
 	{
-		if (is_null($tz))
-		{
-			$testDate = new Date($setTime);
-		}
-		else
-		{
-			$testDate = new Date($setTime, $tz);
-		}
+		$testDate = new Date($setTime, $tz);
+		$offset = $testDate->getOffsetFromGmt($hours);
 
-		if (is_null($hours))
-		{
-			$offset = $testDate->getOffsetFromGmt();
-		}
-		else
-		{
-			$offset = $testDate->getOffsetFromGmt($hours);
-		}
-
-		$this->assertThat($offset, $this->equalTo($expected));
+		$this->assertEquals($expected, $offset);
 	}
 
 	/**
@@ -566,15 +546,11 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider seedTestFormat
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::format
 	 */
 	public function testFormat($format, $local, $expected)
 	{
-		$this->assertThat(
-			$this->instance->format($format, $local),
-			$this->equalTo($expected)
-		);
+		$this->assertEquals($expected, $this->instance->format($format, $local));
 	}
 
 	/**
@@ -588,24 +564,13 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider seedTestToRFC822
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::toRFC822
 	 */
 	public function testToRFC822($tz, $setTime, $local, $expected)
 	{
-		if (is_null($tz))
-		{
-			$testDate = new Date($setTime);
-		}
-		else
-		{
-			$testDate = new Date($setTime, $tz);
-		}
+		$testDate = new Date($setTime, $tz);
 
-		$this->assertThat(
-			$testDate->toRFC822($local),
-			$this->equalTo($expected)
-		);
+		$this->assertEquals($expected, $testDate->toRFC822($local));
 	}
 
 	/**
@@ -619,24 +584,13 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider seedTestToISO8601
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::toISO8601
 	 */
 	public function testToISO8601($tz, $setTime, $local, $expected)
 	{
-		if (is_null($tz))
-		{
-			$testDate = new Date($setTime);
-		}
-		else
-		{
-			$testDate = new Date($setTime, $tz);
-		}
+		$testDate = new Date($setTime, $tz);
 
-		$this->assertThat(
-			$testDate->toISO8601($local),
-			$this->equalTo($expected)
-		);
+		$this->assertEquals($expected, $testDate->toISO8601($local));
 	}
 
 	/**
@@ -649,24 +603,13 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider seedTestToUnix
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::toUnix
 	 */
 	public function testToUnix($tz, $setTime, $expected)
 	{
-		if (is_null($tz))
-		{
-			$testDate = new Date($setTime);
-		}
-		else
-		{
-			$testDate = new Date($setTime, $tz);
-		}
+		$testDate = new Date($setTime, $tz);
 
-		$this->assertThat(
-			$testDate->toUnix(),
-			$this->equalTo($expected)
-		);
+		$this->assertEquals($expected, $testDate->toUnix());
 	}
 
 	/**
@@ -678,31 +621,12 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @dataProvider seedTestSetTimezone
-	 * @since   1.0
 	 * @covers  Joomla\Date\Date::setTimezone
 	 */
 	public function testSetTimezone($tz, $expected)
 	{
 		$this->instance->setTimezone(new \DateTimeZone($tz));
-		$this->assertThat(
-			$this->instance->format('r', true),
-			$this->equalTo($expected)
-		);
-	}
 
-	/**
-	 * Sets up the fixture.
-	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function setUp()
-	{
-		// Note: do not extend parent setUp method
-
-		$this->instance = new Date('12/20/2007 11:44:56', 'America/New_York');
+		$this->assertEquals($expected, $this->instance->format('r', true));
 	}
 }
