@@ -74,10 +74,10 @@ class Date extends \DateTime
 	public function __construct($date = 'now', $tz = null)
 	{
 		// Create the base GMT and server time zone objects.
-		if (empty(self::$gmt) || empty(self::$stz))
+		if (empty(static::$gmt) || empty(static::$stz))
 		{
-			self::$gmt = new \DateTimeZone('GMT');
-			self::$stz = new \DateTimeZone(@date_default_timezone_get());
+			static::$gmt = new \DateTimeZone('GMT');
+			static::$stz = new \DateTimeZone(@date_default_timezone_get());
 		}
 
 		// If the time zone object is not set, attempt to build it.
@@ -85,7 +85,7 @@ class Date extends \DateTime
 		{
 			if ($tz === null)
 			{
-				$tz = self::$gmt;
+				$tz = static::$gmt;
 			}
 			elseif (is_string($tz))
 			{
@@ -98,13 +98,13 @@ class Date extends \DateTime
 		$date = is_numeric($date) ? date('c', $date) : $date;
 
 		// If now, add the microseconds to date.
-		$date = $date === 'now' ? parent::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''), $tz)->format('Y-m-d H:i:s.u') : $date;
+		$date = $date === 'now' ? static::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''), $tz)->format('Y-m-d H:i:s.u') : $date;
 
 		// Call the DateTime constructor.
 		parent::__construct($date, $tz);
 
 		// Reset the timezone for 3rd party libraries/extension that does not use JDate
-		date_default_timezone_set(self::$stz->getName());
+		date_default_timezone_set(static::$stz->getName());
 
 		// Set the timezone object for access later.
 		$this->tz = $tz;
@@ -194,7 +194,7 @@ class Date extends \DateTime
 	 */
 	public function __toString()
 	{
-		return (string) parent::format(self::$format);
+		return (string) parent::format(static::$format);
 	}
 
 	/**
@@ -212,7 +212,7 @@ class Date extends \DateTime
 		// If the returned time should not be local use GMT.
 		if ($local == false)
 		{
-			parent::setTimezone(self::$gmt);
+			parent::setTimezone(static::$gmt);
 		}
 
 		// Format the date.
