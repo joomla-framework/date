@@ -145,6 +145,11 @@ class DateTest extends \PHPUnit_Framework_TestCase
 				'second',
 				5,
 			),
+			'microsecond' => array(
+				'2000-01-02 03:04:05.000006',
+				'microsecond',
+				'000006',
+			),
 			'month' => array(
 				'2000-01-02 03:04:05',
 				'month',

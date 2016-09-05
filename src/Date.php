@@ -157,6 +157,10 @@ class Date extends \DateTime
 				$value = $this->format('s', true);
 				break;
 
+			case 'microsecond':
+				$value = $this->format('u', true);
+				break;
+
 			case 'month':
 				$value = $this->format('m', true);
 				break;
