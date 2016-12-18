@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2016 Open Source Matters. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -9,10 +9,17 @@ namespace Joomla\Date\Tests;
 use Joomla\Date\Date;
 
 /**
- * Tests for \Joomla\Date\Date class.
+ * Tests for \Joomla\Date\Date.
  */
 class DateTest extends \PHPUnit_Framework_TestCase
 {
+	/**
+	 * Backup of the date format in use by JDate
+	 *
+	 * @var  string
+	 */
+	private $format;
+
 	/**
 	 * An instance of the class to test.
 	 *
@@ -21,24 +28,45 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	private $instance;
 
 	/**
+	 * Sets up the fixture.
+	 *
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->format = Date::$format;
+
+		$this->instance = new Date('12/20/2007 11:44:56', 'America/New_York');
+	}
+
+	/**
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function tearDown()
+	{
+		Date::$format = $this->format;
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Test cases for __construct
 	 *
 	 * @return  array
 	 */
 	public function seedTest__construct()
 	{
-		date_default_timezone_set('UTC');
-
-		return array(
+		$cases = array(
 			'basic' => array(
 				'12/23/2008 13:45',
 				null,
 				'Tue 12/23/2008 13:45',
-			),
-			'unix' => array(
-				strtotime('12/26/2008 13:45'),
-				null,
-				'Fri 12/26/2008 13:45',
 			),
 			'tzCT' => array(
 				'12/23/2008 13:45',
@@ -51,6 +79,22 @@ class DateTest extends \PHPUnit_Framework_TestCase
 				'Tue 12/23/2008 13:45',
 			),
 		);
+
+		// Backup the default timezone before continuing - Using the system timezone apparently causes test failures
+		$timezone = new \DateTimeZone(date_default_timezone_get());
+
+		date_default_timezone_set('UTC');
+
+		$cases['unix'] = array(
+			strtotime('12/26/2008 13:45'),
+			null,
+			'Fri 12/26/2008 13:45',
+		);
+
+		// Restore the timezone
+		date_default_timezone_set($timezone->getName());
+
+		return $cases;
 	}
 
 	/**
@@ -100,6 +144,11 @@ class DateTest extends \PHPUnit_Framework_TestCase
 				'2000-01-02 03:04:05',
 				'second',
 				5,
+			),
+			'microsecond' => array(
+				'2000-01-02 03:04:05.000006',
+				'microsecond',
+				'000006',
 			),
 			'month' => array(
 				'2000-01-02 03:04:05',
@@ -390,19 +439,12 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	{
 		$Date = new Date($date, $tz);
 
-		$this->assertEquals(
-			$expectedTime,
-			date_format($Date, 'D m/d/Y H:i')
-		);
-
-		$this->assertEquals(
-			$expectedTime,
-			$Date->format('D m/d/Y H:i')
-		);
+		$this->assertEquals($expectedTime, date_format($Date, 'D m/d/Y H:i'));
+		$this->assertEquals($expectedTime, $Date->format('D m/d/Y H:i', true));
 	}
 
 	/**
-	 * Testing the magic get method
+	 * Testing the magic getter
 	 *
 	 * @param   string  $date      The date.
 	 * @param   string  $property  The property to test.
@@ -415,10 +457,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	{
 		$Date = new Date($date);
 
-		$this->assertEquals(
-			$expected,
-			$Date->$property
-		);
+		$this->assertEquals($expected, $Date->$property);
 	}
 
 	/**
@@ -428,14 +467,9 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__toString()
 	{
-		Date::$format = 'Y-m-d H:i:s';
-
 		$Date = new Date('2000-01-01 00:00:00');
 
-		$this->assertSame(
-			'2000-01-01 00:00:00',
-			(string) $Date
-		);
+		$this->assertEquals('2000-01-01 00:00:00', (string) $Date);
 	}
 
 	/**
@@ -454,10 +488,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 			Date::$format = $format;
 		}
 
-		$this->assertEquals(
-			$expectedTime,
-			$this->instance->__toString()
-		);
+		$this->assertEquals($expectedTime, (string) $this->instance);
 	}
 
 	/**
@@ -491,10 +522,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFormatGmt($format, $expected)
 	{
-		$this->assertEquals(
-			$expected,
-			$this->instance->formatGmt($format)
-		);
+		$this->assertEquals($expected, $this->instance->format($format));
 	}
 
 	/**
@@ -512,10 +540,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	{
 		$testDate = new Date($setTime, $tz);
 
-		$this->assertEquals(
-			$expected,
-			$testDate->toRFC822($local)
-		);
+		$this->assertEquals($expected, $testDate->toRFC822($local));
 	}
 
 	/**
@@ -533,10 +558,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	{
 		$testDate = new Date($setTime, $tz);
 
-		$this->assertEquals(
-			$expected,
-			$testDate->toISO8601($local)
-		);
+		$this->assertEquals($expected, $testDate->toISO8601($local));
 	}
 
 	/**
@@ -553,10 +575,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	{
 		$testDate = new Date($setTime, $tz);
 
-		$this->assertEquals(
-			$expected,
-			$testDate->toUnix()
-		);
+		$this->assertEquals($expected, $testDate->toUnix());
 	}
 
 	/**
@@ -571,21 +590,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	public function testSetTimezone($tz, $expected)
 	{
 		$this->instance->setTimezone(new \DateTimeZone($tz));
-		$this->assertEquals(
-			$expected,
-			$this->instance->format('r')
-		);
-	}
 
-	/**
-	 * Sets up the fixture.
-	 *
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		// Note: do not extend parent setUp method
-
-		$this->instance = new Date('12/20/2007 11:44:56', 'America/New_York');
+		$this->assertEquals($expected, $this->instance->format('r'));
 	}
 }

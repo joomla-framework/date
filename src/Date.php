@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Date Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -20,6 +20,7 @@ namespace Joomla\Date;
  * @property-read  string   $hour          H - 24-hour format of an hour with leading zeros.
  * @property-read  string   $minute        i - Minutes with leading zeros.
  * @property-read  string   $second        s - Seconds with leading zeros.
+ * @property-read  string   $microsecond   u - Microseconds with leading zeros.
  * @property-read  string   $month         m - Numeric representation of a month, with leading zeros.
  * @property-read  string   $ordinal       S - English ordinal suffix for the day of the month, 2 characters.
  * @property-read  string   $week          W - Numeric representation of the day of the week.
@@ -72,10 +73,10 @@ class Date extends \DateTime
 	public function __construct($date = 'now', $tz = null)
 	{
 		// Create the base GMT and server time zone objects.
-		if (empty(self::$gmt) || empty(self::$stz))
+		if (empty(static::$gmt) || empty(static::$stz))
 		{
-			self::$gmt = new \DateTimeZone('GMT');
-			self::$stz = new \DateTimeZone(@date_default_timezone_get());
+			static::$gmt = new \DateTimeZone('GMT');
+			static::$stz = new \DateTimeZone(@date_default_timezone_get());
 		}
 
 		// If the time zone object is not set, attempt to build it.
@@ -83,7 +84,7 @@ class Date extends \DateTime
 		{
 			if ($tz === null)
 			{
-				$tz = self::$gmt;
+				$tz = static::$gmt;
 			}
 			elseif (is_string($tz))
 			{
@@ -95,11 +96,18 @@ class Date extends \DateTime
 		date_default_timezone_set('UTC');
 		$date = is_numeric($date) ? date('c', $date) : $date;
 
+		// If php version below 7.1 and current time, add the microseconds to date.
+		// See https://secure.php.net/manual/en/migration71.incompatible.php#migration71.incompatible.datetime-microseconds
+		if ($date === 'now' && version_compare(PHP_VERSION, '7.1.0', '<'))
+		{
+			$date = parent::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''), $tz)->format('Y-m-d H:i:s.u');
+		}
+
 		// Call the DateTime constructor.
 		parent::__construct($date, $tz);
 
 		// Reset the timezone for 3rd party libraries/extension that does not use JDate
-		date_default_timezone_set(self::$stz->getName());
+		date_default_timezone_set(static::$stz->getName());
 
 		// Set the timezone object for access later.
 		$this->tz = $tz;
@@ -152,6 +160,10 @@ class Date extends \DateTime
 				$value = $this->format('s');
 				break;
 
+			case 'microsecond':
+				$value = $this->format('u');
+				break;
+
 			case 'month':
 				$value = $this->format('m');
 				break;
@@ -189,7 +201,7 @@ class Date extends \DateTime
 	 */
 	public function __toString()
 	{
-		return (string) $this->format(self::$format);
+		return (string) $this->format(static::$format);
 	}
 
 	/**
@@ -206,7 +218,7 @@ class Date extends \DateTime
 		// Backup the current timezone
 		$backupTz = $this->tz;
 
-		$this->setTimezone(self::$gmt);
+		$this->setTimezone(static::$gmt);
 
 		// Format the date.
 		$return = $this->format($format);
