@@ -7,14 +7,15 @@
 namespace Joomla\Date\Tests;
 
 use Joomla\Date\Date;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for \Joomla\Date\Date.
  */
-class DateTest extends \PHPUnit_Framework_TestCase
+class DateTest extends TestCase
 {
 	/**
-	 * Backup of the date format in use by JDate
+	 * Backup of the date format in use
 	 *
 	 * @var  string
 	 */
