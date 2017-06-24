@@ -441,7 +441,7 @@ class DateTest extends TestCase
 		$Date = new Date($date, $tz);
 
 		$this->assertEquals($expectedTime, date_format($Date, 'D m/d/Y H:i'));
-		$this->assertEquals($expectedTime, $Date->format('D m/d/Y H:i', true));
+		$this->assertEquals($expectedTime, $Date->format('D m/d/Y H:i'));
 	}
 
 	/**
@@ -523,7 +523,7 @@ class DateTest extends TestCase
 	 */
 	public function testFormatGmt($format, $expected)
 	{
-		$this->assertEquals($expected, $this->instance->format($format));
+		$this->assertEquals($expected, $this->instance->formatGmt($format));
 	}
 
 	/**
