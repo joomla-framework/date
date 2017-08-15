@@ -206,7 +206,7 @@ class Date extends \DateTime
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function formatGmt($format)
+	public function formatGmt(string $format): string
 	{
 		// Backup the current timezone
 		$backupTz = $this->tz;
