@@ -5,6 +5,10 @@
 [![Latest Unstable Version](https://poser.pugx.org/joomla/date/v/unstable)](https://packagist.org/packages/joomla/date)
 [![License](https://poser.pugx.org/joomla/date/license)](https://packagist.org/packages/joomla/date)
 
+## Deprecated
+
+The `joomla/date` package is deprecated with no further updates planned.
+
 ## Installation via Composer
 
 Add `"joomla/date": "~1.0"` to the require block in your composer.json and then run `composer install`.

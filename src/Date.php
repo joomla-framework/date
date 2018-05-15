@@ -26,7 +26,8 @@ namespace Joomla\Date;
  * @property-read  string   $week          W - Numeric representation of the day of the week.
  * @property-read  string   $year          Y - A full numeric representation of a year, 4 digits.
  *
- * @since  1.0
+ * @since       1.0
+ * @deprecated  The joomla/date package is deprecated
  */
 class Date extends \DateTime
 {
