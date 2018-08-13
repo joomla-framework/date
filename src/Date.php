@@ -125,54 +125,67 @@ class Date extends \DateTime
 		{
 			case 'daysinmonth':
 				$value = $this->format('t', true);
+
 				break;
 
 			case 'dayofweek':
 				$value = $this->format('N', true);
+
 				break;
 
 			case 'dayofyear':
 				$value = $this->format('z', true);
+
 				break;
 
 			case 'isleapyear':
 				$value = (boolean) $this->format('L', true);
+
 				break;
 
 			case 'day':
 				$value = $this->format('d', true);
+
 				break;
 
 			case 'hour':
 				$value = $this->format('H', true);
+
 				break;
 
 			case 'minute':
 				$value = $this->format('i', true);
+
 				break;
 
 			case 'second':
 				$value = $this->format('s', true);
+
 				break;
 
 			case 'microsecond':
 				$value = $this->format('u', true);
+
 				break;
 
 			case 'month':
 				$value = $this->format('m', true);
+
 				break;
 
 			case 'ordinal':
 				$value = $this->format('S', true);
+
 				break;
 
 			case 'week':
 				$value = $this->format('W', true);
+
 				break;
 
 			case 'year':
 				$value = $this->format('Y', true);
+
 				break;
 
 			default:
