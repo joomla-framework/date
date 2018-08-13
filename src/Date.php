@@ -88,7 +88,7 @@ class Date extends \DateTime
 			{
 				$tz = static::$gmt;
 			}
-			elseif (is_string($tz))
+			elseif (\is_string($tz))
 			{
 				$tz = new \DateTimeZone($tz);
 			}
