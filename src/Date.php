@@ -205,7 +205,7 @@ class Date extends \DateTime
 	 *
 	 * @return  string   The date string in the specified format.
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	public function formatGmt(string $format): string
 	{
