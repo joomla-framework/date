@@ -1,4 +1,4 @@
-# The Date Package [![Build Status](https://travis-ci.org/joomla-framework/date.png?branch=master)](https://travis-ci.org/joomla-framework/date) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/joomla-framework/date/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/joomla-framework/date/?branch=master)
+# The Date Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/date/status.svg)](https://ci.joomla.org/joomla-framework/date)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/date/v/stable)](https://packagist.org/packages/joomla/date)
 [![Total Downloads](https://poser.pugx.org/joomla/date/downloads)](https://packagist.org/packages/joomla/date)
