@@ -7,7 +7,10 @@
 
 ## Deprecated
 
-The `joomla/date` package is deprecated with no further updates planned.
+The `joomla/date` package is deprecated with no further updates planned. Use
+the [Carbon](https://github.com/briannesbitt/Carbon) library instead.
+
+See https://framework.joomla.org/contribute
 
 ## Installation via Composer
 
